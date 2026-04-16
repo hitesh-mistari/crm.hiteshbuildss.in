@@ -100,16 +100,87 @@ function QuickCaptureModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function LoginPanel({ onLogin }: { onLogin: () => void }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === 'hitesh' && password === 'http://founder.deoreandassociates.in/') {
+      onLogin();
+    } else {
+      setError('Invalid username or password');
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
+        <div className="flex justify-center mb-6">
+          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center text-xl font-bold">
+            ⚡
+          </div>
+        </div>
+        <h2 className="text-2xl font-black text-slate-900 mb-1 text-center">FounderOS</h2>
+        <p className="text-slate-500 text-sm text-center mb-6 font-medium">Log in to manage your empire</p>
+
+        {error && (
+          <div className="bg-red-50 text-red-600 text-sm font-medium p-3 rounded-xl mb-4 text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5 ml-1">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all font-medium text-slate-900"
+              placeholder="Enter your username"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5 ml-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all font-medium text-slate-900"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button type="submit" className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 hover:shadow-slate-900/30 transition-all active:scale-[0.98] mt-2">
+            Secure Login
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function App() {
   const { activeView, sidebarCollapsed, showSearch, toggleSearch, loadFromDB } = useStore();
   const [showQuickCapture, setShowQuickCapture] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('isAuth') === 'true');
   const leftOffset = sidebarCollapsed ? 72 : 240;
 
   const ActiveModule = moduleMap[activeView as keyof typeof moduleMap] ?? null;
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('isAuth', 'true');
+  };
+
   useEffect(() => {
-    loadFromDB();
-  }, []);
+    if (isAuthenticated) {
+      loadFromDB();
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -124,7 +195,11 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleSearch]);
+  }, [toggleSearch, isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <LoginPanel onLogin={handleLogin} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] font-sans">
