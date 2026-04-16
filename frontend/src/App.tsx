@@ -107,7 +107,7 @@ function LoginPanel({ onLogin }: { onLogin: () => void }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'hitesh' && password === 'http://founder.deoreandassociates.in/') {
+    if (username === 'hitesh' && password === 'MKfzU8uXuqz9AcbX') {
       onLogin();
     } else {
       setError('Invalid username or password');
