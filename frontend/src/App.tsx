@@ -15,6 +15,7 @@ import FocusModule from './components/modules/focus/FocusModule';
 import InboxModule from './components/modules/inbox/InboxModule';
 import WeeklyReviewModule from './components/modules/weekly-review/WeeklyReviewModule';
 import SearchModal from './components/common/SearchModal';
+import SyncDataOverlay from './components/common/SyncDataOverlay';
 
 const moduleMap = {
   finance: FinanceModule,
@@ -205,6 +206,7 @@ export default function App() {
     <div className="min-h-screen bg-[#F5F7FA] font-sans">
       <Sidebar />
       <TopNavbar />
+      <SyncDataOverlay />
 
       <main
         className="min-h-screen pt-16 transition-all duration-[250ms] md:ml-[var(--sidebar-width)]"

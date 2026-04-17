@@ -5,14 +5,25 @@ import {
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const OVERRIDE_KEY = import.meta.env.VITE_USER_KEY;
 
 export function getUserKey(): string {
+  if (OVERRIDE_KEY) return OVERRIDE_KEY;
   let key = localStorage.getItem('founderos_user_key');
   if (!key) {
     key = crypto.randomUUID();
     localStorage.setItem('founderos_user_key', key);
   }
   return key;
+}
+
+export function setUserKey(key: string) {
+  localStorage.setItem('founderos_user_key', key);
+  window.location.reload();
+}
+
+export async function discoverKeys(): Promise<{ user_key: string, count: number }[]> {
+  return api<{ user_key: string, count: number }[]>('/debug/keys');
 }
 
 const uk = () => getUserKey();

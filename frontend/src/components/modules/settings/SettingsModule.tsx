@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Save, RotateCcw, AlertTriangle } from 'lucide-react';
+import { Save, RotateCcw, AlertTriangle, Key, LogIn } from 'lucide-react';
+import { discoverKeys, setUserKey, getUserKey } from '../../../lib/db';
 import { motion } from 'framer-motion';
 import ModuleLayout from '../../layout/ModuleLayout';
 import { useStore } from '../../../store/useStore';
@@ -146,6 +147,37 @@ export default function SettingsModule() {
               Reset All Data
             </button>
           )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.30 }}
+          className="bg-white rounded-2xl border border-slate-200 p-6"
+        >
+          <h3 className="text-sm font-semibold text-slate-800 mb-2">Account Identity</h3>
+          <p className="text-xs text-slate-500 mb-4">Your data is linked to this unique ID. If you have data on another device, you can sync it here.</p>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1.5">Current ID</label>
+              <div className="flex gap-2">
+                <div className="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-mono text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {getUserKey()}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const id = prompt('Enter your User ID to sync:');
+                    if (id && id.length > 10) setUserKey(id);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-medium hover:bg-slate-200 transition-colors"
+                >
+                  <Key size={13} />
+                  Change ID
+                </button>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </ModuleLayout>
